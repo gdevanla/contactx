@@ -2,6 +2,16 @@
 import os
 import socket
 
+import braintree
+
+braintree.Configuration.configure(
+    braintree.Environment.Sandbox,
+    "44hjg9jzbvdrqgct",
+    "gxjkwxbn7m323mmh",
+    "bcc00c5ff30f5230c27ab1fe0c40237e"
+)
+
+
 ipaddr=socket.gethostbyname(socket.gethostname())
 
 DEBUG = True
@@ -119,7 +129,7 @@ TEMPLATE_LOADERS = (
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+#    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:

@@ -7,6 +7,7 @@ from upload_form import UploadFileForm
 from django.views.decorators.csrf import csrf_protect
 from django.template import RequestContext
 from django.core.context_processors import csrf
+from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 
@@ -15,8 +16,8 @@ import settings
 from webapp.models import UserResume, CandidateRating
 
 import urllib
-
-
+import braintree
+import urlparse
 
 def index(request, template='index.html'):
     services = [
@@ -79,6 +80,7 @@ def save_qr_code(request, userid, user_resume_id):
     qrobj = urllib.urlopen(url)
     return HttpResponse(qrobj.read(), content_type='image/png')
 
+
 def handle_uploaded_file(file):
     path = os.path.join(settings.FILE_UPLOAD_PATH, file.name)
     print path
@@ -95,6 +97,8 @@ def get_resume(request, user_resume_id):
     f = open(path)
     return HttpResponse(f.read(), content_type='application/pdf')
 
+
+@csrf_exempt
 def get_candidate_info(request, userid, user_resume_id):
     try:
         user_profile = request.user.get_profile()
@@ -111,9 +115,11 @@ def get_candidate_info(request, userid, user_resume_id):
 
     return response
 
+@csrf_exempt
 def rate_candidate(request, user_resume_id):
-    rating = 12 ; #request.POST['Rating']
-    email = 'e@e.com'
+    print request.raw_post_data
+    rating = request.POST['Rating']
+    email = request.POST['Email']
     user_resume = UserResume.objects.get(id=user_resume_id)
 
     CandidateRating.objects.create(user_resume=user_resume,
@@ -126,3 +132,36 @@ def _get_domain_addr():
     import socket
     ipaddr = socket.gethostbyname(socket.gethostname())
     return  "http://%s:8000" % (ipaddr)
+
+
+def download_resumes(request, emailid):
+
+     tr_data = braintree.Transaction.tr_data_for_sale(
+            {"transaction": {"type": "sale",
+                             "amount": "10",
+                             "options": {"submit_for_settlement": True}}},
+            "%s/webapp/fullfil/%s/" % (_get_domain_addr(), 1))
+
+     braintree_url = braintree.TransparentRedirect.url()
+     #return render_template("download_resumes.html", tr_data=tr_data,
+     #                      braintree_url=braintree_url)
+
+     response = render_to_response(
+         "download_resumes.html", locals(), context_instance=RequestContext(request)
+     )
+     return response
+
+
+def fullfil_purchase(request, emailid):
+
+    query_string = urlparse.urlparse(request.get_full_path()).query
+
+    result = braintree.TransparentRedirect.confirm(query_string)
+    if result.is_success:
+        message = "Transaction Successful: %s. Amount: %s" % (
+                        result.transaction.status, result.transaction.amount)
+    else:
+        message = "Errors: %s" % " ".join(error.message for error in
+                                                   result.errors.deep_errors)
+    return render_to_response("fullfil_purchase.html",
+                              locals(), context_instance=RequestContext(request))
