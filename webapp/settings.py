@@ -1,5 +1,8 @@
 # Django settings for python_django_skeleton project.
 import os
+import socket
+
+ipaddr=socket.gethostbyname(socket.gethostname())
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -8,7 +11,8 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 SINGLY_CLIENT_ID = ''
 SINGLY_CLIENT_SECRET = ''
 # lvh.me is just a domain name for localhost
-SINGLY_REDIRECT_URI = 'http://lvh.me:8000/authorize/callback'
+#SINGLY_REDIRECT_URI = 'http://localhost:8000/authorize/callback'
+SINGLY_REDIRECT_URI = 'http://%s:8000/authorize/callback' % (ipaddr)
 
 AUTH_PROFILE_MODULE = "singly.UserProfile"
 
@@ -18,16 +22,28 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+#        'NAME': 'singlydb',  # Or path to database file if using sqlite3.
+#        'USER': 'contactx',                      # Not used with sqlite3.
+#        'PASSWORD': 'contactx',                  # Not used with sqlite3.
+#        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+#        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+#    }
+#}
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'python_skeleton.db',  # Or path to database file if using sqlite3.
+        'NAME': 'contactx.db',  # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -165,3 +181,10 @@ LOGGING = {
         },
     }
 }
+
+
+# values from singly
+SINGLY_CLIENT_ID='32eb2ae73ca4ab52f9518b549230d0ca'
+SINGLY_CLIENT_SECRET='f4e6f1a42bf630f3d90cf0eaab9b3213'
+
+FILE_UPLOAD_PATH='resume_store'

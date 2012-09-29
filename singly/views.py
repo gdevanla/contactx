@@ -8,7 +8,6 @@ def authenticate_redirect(request, service):
     url = SinglyHelper.get_authorize_url(service)
     return HttpResponseRedirect(url)
 
-
 def authorize_callback(request):
     code = request.GET.get('code')
     content = SinglyHelper.get_access_token(code)

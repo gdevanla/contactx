@@ -4,7 +4,8 @@
     <title></title>
 </head>
 <body>
-<form action="/webapp/resume/upload" method="post">{% csrf_token %}
+<form enctype="multipart/form-data" action="/webapp/resume/upload/" method="post">
+    {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Submit" />
 </form>
