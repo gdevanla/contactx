@@ -18,6 +18,7 @@ urlpatterns = patterns('webapp.views',
         'rate_candidate'),
     url(r'^webapp/download/(?P<emailid>\w+)/$',
         'download_resumes'),
-    url(r'^webapp/fullfil/(?P<emailid>\w+)/$',
+    url(r'^webapp/fullfil/(?P<emailid>.*)/$',
         'fullfil_purchase'),
+    url(r'^rate.html', 'get_rate'),
 )

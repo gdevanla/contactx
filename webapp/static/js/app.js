@@ -25,11 +25,12 @@ $(function() {
    singly.get('/services/linkedin/self',{}, function(data) {
 	lp=data[0].data
          $('#employeePic').attr('src',lp.pictureUrl);
-         $('#fullName').text(lp.firstName +' '+lp.lastName);
+         $('#resume_url').attr('href', resume_url);
+         $('#fullName').text(lp.firstName +' '+lp.lastName)
          $('#employeeTitle').text(lp.headline);
 	 $('#city').text(lp.mainAddress);
 	 //if (employee.email) {
-                $('#actionList').append('<li><a href="mailto:freegyaan@gmail.com"><h3>Email</h3><p>freegyaan@gmail.com</p></a></li>');
+                $('#actionList').append('<li><a href="mailto:freegyaan@gmail.com"><p>Email/Twitter/Facebook</p></a></li>');
          //}
 	 $.each(lp.skills, function(i, item){
 		$.each(item, function(h,k){
@@ -52,7 +53,7 @@ $(function() {
 
 		});
 	 });
-	
+
          $('#coolstuff').append(lp.industry +', ');
          $('#coolstuff').append(lp.interests +', ');
          $('#coolstuff').append(lp.mainAddress +', ');
@@ -69,29 +70,13 @@ $(function() {
 
 		});
 	 });
-	 
-	
-	
+
+
+
          $('#coolstuff').append('<li>'+ lp.specialties +'</li>');
    });
-   
+
 
 
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

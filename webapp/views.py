@@ -10,10 +10,12 @@ from django.core.context_processors import csrf
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
+from django.utils.http import urlencode
 
 import os
 import settings
 from webapp.models import UserResume, CandidateRating
+from singly.models import UserProfile
 
 import urllib
 import braintree
@@ -71,7 +73,7 @@ def save_qr_code(request, userid, user_resume_id):
     import socket
     ipaddr = socket.gethostbyname(socket.gethostname())
 
-    data = "%s/webapp/employee/%s/resume/%s" % (_get_domain_addr(), userid, user_resume_id)
+    data = "%s/webapp/candidate/%s/resume/%s" % (_get_domain_addr(), userid, user_resume_id)
 
     url = \
           "http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl=%s&chld=H|0" \
@@ -100,14 +102,18 @@ def get_resume(request, user_resume_id):
 
 @csrf_exempt
 def get_candidate_info(request, userid, user_resume_id):
+    print 'in get_candidate_info'
     try:
-        user_profile = request.user.get_profile()
+        print 'userid=', userid
+        user_profile = UserProfile.objects.get(id=userid)
     except UserProfile.DoesNotExist:
         return response_to_render(request, True)
 
+    host_name = _get_domain_addr()
     user_resume =  UserResume.objects.get(id=user_resume_id)
     print user_resume.file_location
-    resume_url = "%s/webapp/resume/user_resume.file_location" % (_get_domain_addr())
+
+    resume_url = "%s/webapp/resume/%s" % (_get_domain_addr(), user_resume.id)
 
     response = render_to_response(
             'candidate.html', locals(), context_instance=RequestContext(request)
@@ -115,17 +121,30 @@ def get_candidate_info(request, userid, user_resume_id):
 
     return response
 
+def get_rate(request):
+    response = render_to_response(
+            'rate.html', locals(), context_instance=RequestContext(request)
+        )
+
+    return response
+
+
+
 @csrf_exempt
 def rate_candidate(request, user_resume_id):
     print request.raw_post_data
-    rating = request.POST['Rating']
-    email = request.POST['Email']
+    rating = request.GET['Rating']
+    email = request.GET['Email']
+
+
+    print 'email=', email
     user_resume = UserResume.objects.get(id=user_resume_id)
 
     CandidateRating.objects.create(user_resume=user_resume,
                                    rating = rating, email=email)
 
-    return HttpResponse("Candidate rating has been saved", True)
+    print 'returing after rate_candidate'
+    return HttpResponse("Candidate rating has been saved", content_type='text/html')
 
 
 def _get_domain_addr():
@@ -135,22 +154,21 @@ def _get_domain_addr():
 
 
 def download_resumes(request, emailid):
+    emaild = 'freegyan@gmail.com'
+    tr_data = braintree.Transaction.tr_data_for_sale(
+        {"transaction": {"type": "sale",
+                         "amount": "10",
+                         "options": {"submit_for_settlement": True}}},
+        "%s/webapp/fullfil/%s" % (_get_domain_addr(), 'freegyan@gmail.com'))
 
-     tr_data = braintree.Transaction.tr_data_for_sale(
-            {"transaction": {"type": "sale",
-                             "amount": "10",
-                             "options": {"submit_for_settlement": True}}},
-            "%s/webapp/fullfil/%s/" % (_get_domain_addr(), 1))
+    braintree_url = braintree.TransparentRedirect.url()
+    #return render_template("download_resumes.html", tr_data=tr_data,
+    #                      braintree_url=braintree_url)
 
-     braintree_url = braintree.TransparentRedirect.url()
-     #return render_template("download_resumes.html", tr_data=tr_data,
-     #                      braintree_url=braintree_url)
-
-     response = render_to_response(
-         "download_resumes.html", locals(), context_instance=RequestContext(request)
-     )
-     return response
-
+    response = render_to_response(
+        "download_resumes.html", locals(), context_instance=RequestContext(request)
+    )
+    return response
 
 def fullfil_purchase(request, emailid):
 
@@ -158,10 +176,26 @@ def fullfil_purchase(request, emailid):
 
     result = braintree.TransparentRedirect.confirm(query_string)
     if result.is_success:
-        message = "Transaction Successful: %s. Amount: %s" % (
-                        result.transaction.status, result.transaction.amount)
+        message = "Transaction Successful for Amount: %s" % (
+                        result.transaction.amount)
+
+        cand_list  = CandidateRating.objects.filter(email=emailid)
+
+        records = list()
+        for cand in cand_list:
+            user_profile = cand.user_resume.user
+            access_token = user_profile.access_token
+            file_location = "%s/webapp/resume/%s" % (_get_domain_addr(),
+                                                     cand.user_resume.id)
+
+            rating = cand.rating
+
+            row = [ access_token, file_location, rating]
+            print row
+
     else:
         message = "Errors: %s" % " ".join(error.message for error in
                                                    result.errors.deep_errors)
     return render_to_response("fullfil_purchase.html",
-                              locals(), context_instance=RequestContext(request))
+                              locals(),
+    context_instance=RequestContext(request))
