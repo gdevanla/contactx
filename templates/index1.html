@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+ <head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>ContactX</title>
+	<link rel="stylesheet" href="/static/sec.min.css" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.1/jquery.mobile.structure-1.1.1.min.css" />
+	<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script>
+
+	<script>
+	var accessToken = '{{ user_profile.access_token }}';
+	</script>
+
+	<script src="/static/js/app.js"></script>
+<style>
+.center-wrapper{
+text-align: center;
+}
+.center-wrapper * {
+margin: 0 auto;
+}
+
+#cente_rPage {
+    background: url('http://chicagoultimatetraining.webs.com/ChicagoSkyline1.jpg');
+    background-repeat:repeat-y;
+    background-position:center center;
+    background-attachment:scroll;
+    background-size:100% 100%;
+    filter: alpha(opacity=50);
+    opacity: 0.5;
+}
+.ui-page {
+}
+.ui-content{
+    background: transparent;
+}
+
+[data-role=page]{height: 100% !important; position:relative !important;}
+[data-role=footer]{bottom:0; position:absolute !important; top: auto !important; width:100%;}
+</style>
+
+ </head>
+
+ <body>
+	<div id="detailsPage" data-role="page" data-add-back-btn="true">
+
+        	<div data-role="header">
+        	        <h1>ContactX</h1>
+        	</div>
+
+  		<div data-role="content">
+          {% if not request.user.is_authenticated %}
+		<div id="centerPage" class="center-wrapper">
+                    <p>Register with one or more of these services:</p>
+		<a target="blank"
+		href="/authenticate/linkedin"><img src="/static/linkedin.png"/></a><a target="blank" href="/authenticate/twitter"><img src="/static/twitter.png"/></a>
+    		<div id="empowered">
+     		<a href="http://singly.com/"><img src="/static/empowered.png" height=10 width=100/></a>
+     		<a href="http://braintree.com"><img src="http://techli.com/wp-content/uploads/2010/12/braintree_logo.gif" height="30" width="100"></a>
+    		</div>
+		</div>
+        {% endif %}
+
+
+    {% if request.user.is_authenticated %}
+    <a target="blank" href="/webapp/resume/upload">Upload your resume</a>
+    {% endif %}
+
+
+	</div>
+ 	<div data-role="footer"><h1></h1></div>
+ </body>
+</html>

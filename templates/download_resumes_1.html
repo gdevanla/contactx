@@ -1,0 +1,31 @@
+<html>
+  <head>
+    <style type='text/css'>label {display: block;} input {margin-bottom:
+    10px;}</style>
+    <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <h1>Braintree Credit Card Transaction Form</h1>
+     <form id='payment-form' action='{{ braintree_url }}' method='POST'>
+      <input type='hidden' name='tr_data' value='{{ tr_data }}' id='trdata' />
+      <div>
+        <label for="Email">Email</label>
+          <input type="text" name="Email" value="" id="EmailId"/>
+          <label for="Amount">Amount :  $10</label>
+        <h2>Credit Card</h2>
+        <label for='braintree_credit_card_number'>Credit Card Number</label>
+        <input type='text' name='transaction[credit_card][number]' id='braintree_credit_card_number' value='4111111111111111'></input>
+        <label for='braintree_credit_card_exp'>Credit Card Expiry (mm/yyyy)</label>
+        <input type='text' name='transaction[credit_card][expiration_date]' id='braintree_credit_card_exp' value='12/2015'></input>
+      </div>
+      <input class='submit-button' type='submit'>
+    </form>
+     <script type="text/javascript">
+    </script>
+
+  </body>
+  
+</html>

@@ -1,0 +1,28 @@
+<html>
+  <body>
+    <h1>{{message}}</h1>
+    <ul>
+      {% if result.is_success  %}
+      <table>
+        <tr border=1>
+          <td>Profile Pic</td>
+          <td>Name</td>
+          <td>Rating</td>
+          <td><Resume></td>
+        </tr>
+          {% for cand_rate in cand_list %}
+          </tr>
+          <td>--</td>
+          <td>dick</td>
+          <td>{{cand_rate.rating}}</td>
+          <td>{{cand_rate.user_resume.file_location}}</td>
+          </tr>
+{% endfor %}
+        </tr>
+      </table>
+      {% else %}
+      <li> Sorry, we could not process your request at this time</li>
+      {% endif %}
+    </ul>
+  </body>
+</html
