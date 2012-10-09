@@ -16,12 +16,13 @@ import os
 import settings
 from webapp.models import UserResume, CandidateRating
 from singly.models import UserProfile
+from singly.singly import Singly
 
 import urllib
 import braintree
 import urlparse
 
-def index(request, template='index.html'):
+def index(request, template='index1.html'):
     services = [
         'LinkedIn'
     ]
@@ -39,7 +40,7 @@ def index(request, template='index.html'):
 
 
 @login_required
-@csrf_protect
+@csrf_exempt
 def upload_view(request):
     if request.method == 'POST':
 
@@ -159,7 +160,7 @@ def download_resumes(request, emailid):
         {"transaction": {"type": "sale",
                          "amount": "10",
                          "options": {"submit_for_settlement": True}}},
-        "%s/webapp/fullfil/%s" % (_get_domain_addr(), 'freegyan@gmail.com'))
+        "%s/webapp/fullfil/%s" % (_get_domain_addr(), 'freegyaan@gmail.com'))
 
     braintree_url = braintree.TransparentRedirect.url()
     #return render_template("download_resumes.html", tr_data=tr_data,
@@ -172,16 +173,16 @@ def download_resumes(request, emailid):
 
 def fullfil_purchase(request, emailid):
 
-    query_string = urlparse.urlparse(request.get_full_path()).query
+    #query_string = urlparse.urlparse(request.get_full_path()).query
 
-    result = braintree.TransparentRedirect.confirm(query_string)
-    if result.is_success:
-        message = "Transaction Successful for Amount: %s" % (
-                        result.transaction.amount)
+    result = True ; #braintree.TransparentRedirect.confirm(query_string)
+    records = list()
+    if result:
 
+        print 'Checking for email=', emailid
         cand_list  = CandidateRating.objects.filter(email=emailid)
 
-        records = list()
+
         for cand in cand_list:
             user_profile = cand.user_resume.user
             access_token = user_profile.access_token
@@ -189,13 +190,23 @@ def fullfil_purchase(request, emailid):
                                                      cand.user_resume.id)
 
             rating = cand.rating
+            s = Singly(settings.SINGLY_CLIENT_ID, settings.SINGLY_CLIENT_SECRET, access_token)
+            linkedin_profile = s.make_request('/services/linkedin/self')
+            twitter_profile = s.make_request('/services/twitter/self')
 
-            row = [ access_token, file_location, rating]
-            print row
+            picture_url = linkedin_profile[0]['data']['pictureUrl']
+            name = linkedin_profile[0]['data']['lastName'] + "," + \
+                   linkedin_profile[0]['data']['firstName']
+            linkedin_url = linkedin_profile[0]['data']['publicProfileUrl']
+
+            print twitter_profile[0]['data']['screen_name']
+            records.append([picture_url, name, linkedin_url, file_location,
+                            rating, twitter_profile[0]['data']['screen_name']])
+
 
     else:
         message = "Errors: %s" % " ".join(error.message for error in
                                                    result.errors.deep_errors)
-    return render_to_response("fullfil_purchase.html",
+    return render_to_response("recruiter.html",
                               locals(),
     context_instance=RequestContext(request))
