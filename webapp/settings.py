@@ -2,15 +2,6 @@
 import os
 import socket
 
-import braintree
-
-braintree.Configuration.configure(
-    braintree.Environment.Sandbox,
-    "44hjg9jzbvdrqgct",
-    "gxjkwxbn7m323mmh",
-    "bcc00c5ff30f5230c27ab1fe0c40237e"
-)
-
 
 ipaddr=socket.gethostbyname(socket.gethostname())
 
