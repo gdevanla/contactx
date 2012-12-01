@@ -19,7 +19,6 @@ from singly.models import UserProfile
 from singly.singly import Singly
 
 import urllib
-import braintree
 import urlparse
 
 def index(request, template='index1.html'):
@@ -107,8 +106,9 @@ def get_candidate_info(request, userid, user_resume_id):
     try:
         print 'userid=', userid
         user_profile = UserProfile.objects.get(id=userid)
-    except UserProfile.DoesNotExist:
-        return response_to_render(request, True)
+    except UserProfile.DoesNotExist as e:
+        print e
+        return render_to_response(request, True)
 
     host_name = _get_domain_addr()
     user_resume =  UserResume.objects.get(id=user_resume_id)
@@ -154,22 +154,22 @@ def _get_domain_addr():
     return  "http://%s:8000" % (ipaddr)
 
 
-def download_resumes(request, emailid):
-    emaild = 'freegyan@gmail.com'
-    tr_data = braintree.Transaction.tr_data_for_sale(
-        {"transaction": {"type": "sale",
-                         "amount": "10",
-                         "options": {"submit_for_settlement": True}}},
-        "%s/webapp/fullfil/%s" % (_get_domain_addr(), 'freegyaan@gmail.com'))
+# def download_resumes(request, emailid):
+#     emaild = 'freegyan@gmail.com'
+#     tr_data = braintree.Transaction.tr_data_for_sale(
+#         {"transaction": {"type": "sale",
+#                          "amount": "10",
+#                          "options": {"submit_for_settlement": True}}},
+#         "%s/webapp/fullfil/%s" % (_get_domain_addr(), 'freegyaan@gmail.com'))
 
-    braintree_url = braintree.TransparentRedirect.url()
-    #return render_template("download_resumes.html", tr_data=tr_data,
-    #                      braintree_url=braintree_url)
+#     braintree_url = braintree.TransparentRedirect.url()
+#     #return render_template("download_resumes.html", tr_data=tr_data,
+#     #                      braintree_url=braintree_url)
 
-    response = render_to_response(
-        "download_resumes.html", locals(), context_instance=RequestContext(request)
-    )
-    return response
+#     response = render_to_response(
+#         "download_resumes.html", locals(), context_instance=RequestContext(request)
+#     )
+#     return response
 
 def fullfil_purchase(request, emailid):
 

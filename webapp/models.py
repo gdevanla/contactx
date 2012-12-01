@@ -1,4 +1,4 @@
-from django.db import  models
+from django.db import models
 from singly.models import UserProfile
 
 class UserResume(models.Model):
