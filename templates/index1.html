@@ -54,14 +54,13 @@ margin: 0 auto;
   		<div data-role="content">
           {% if not request.user.is_authenticated %}
 		<div id="centerPage" class="center-wrapper">
-                    <p>Register with one or more of these services:</p>
+                    <p>Sign-in using your Linked Account or Twitter Account</p>
 		<a target="blank"
 		href="/authenticate/linkedin"><img src="/static/linkedin.png"/></a><a target="blank" href="/authenticate/twitter"><img src="/static/twitter.png"/></a>
-    		<div id="empowered">
-     		<a href="http://singly.com/"><img src="/static/empowered.png" height=10 width=100/></a>
-     		<a href="http://braintree.com"><img src="http://techli.com/wp-content/uploads/2010/12/braintree_logo.gif" height="30" width="100"></a>
-    		</div>
-		</div>
+
+        <input type="radio" name="role" value="candidate">Sign in as Candidate<br>
+        <input type="radio" name="role" value="recruiter"> Sign in as Recruiter<br>
+
         {% endif %}
 
 

@@ -2,24 +2,19 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 import simplejson
-from django.http import HttpResponseRedirect, HttpResponse
-from upload_form import UploadFileForm
-from django.views.decorators.csrf import csrf_protect
 from django.template import RequestContext
 from django.core.context_processors import csrf
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
-from django.utils.http import urlencode
 
 import os
-import settings
 from webapp.models import UserResume, CandidateRating
 from singly.models import UserProfile
 from singly.singly import Singly
 
 import urllib
-import urlparse
+
+
 
 def index(request, template='index1.html'):
     services = [
@@ -31,10 +26,15 @@ def index(request, template='index1.html'):
         # We replace single quotes with double quotes b/c of python's strict json requirements
         profiles = simplejson.loads(user_profile.profiles.replace("'", '"'))
 
+        mode = request.GET.get('mode', '_cand')
+        if mode == '_recruiter':
+            return fullfil_purchase(request, 'someemail@email.com')
 
+    #default to candidate or login page
     response = render_to_response(
             template, locals(), context_instance=RequestContext(request)
-        )
+    )
+
     return response
 
 
@@ -154,34 +154,27 @@ def _get_domain_addr():
     return  "http://%s:8000" % (ipaddr)
 
 
-# def download_resumes(request, emailid):
-#     emaild = 'freegyan@gmail.com'
-#     tr_data = braintree.Transaction.tr_data_for_sale(
-#         {"transaction": {"type": "sale",
-#                          "amount": "10",
-#                          "options": {"submit_for_settlement": True}}},
-#         "%s/webapp/fullfil/%s" % (_get_domain_addr(), 'freegyaan@gmail.com'))
+def download_resumes(request, emailid):
+    emailid = 'freegyan@gmail.com'
+    #return render_template("download_resumes.html", tr_data=tr_data,
+    #                      braintree_url=braintree_url)
 
-#     braintree_url = braintree.TransparentRedirect.url()
-#     #return render_template("download_resumes.html", tr_data=tr_data,
-#     #                      braintree_url=braintree_url)
-
-#     response = render_to_response(
-#         "download_resumes.html", locals(), context_instance=RequestContext(request)
-#     )
-#     return response
+    response = render_to_response(
+        "download_resumes.html", locals(), context_instance=RequestContext(request)
+    )
+    return response
 
 def fullfil_purchase(request, emailid):
 
     #query_string = urlparse.urlparse(request.get_full_path()).query
 
+    print 'fdsafsaasfsafsasf'
     result = True ; #braintree.TransparentRedirect.confirm(query_string)
     records = list()
     if result:
 
         print 'Checking for email=', emailid
         cand_list  = CandidateRating.objects.filter(email=emailid)
-
 
         for cand in cand_list:
             user_profile = cand.user_resume.user
@@ -202,7 +195,7 @@ def fullfil_purchase(request, emailid):
             print twitter_profile[0]['data']['screen_name']
             records.append([picture_url, name, linkedin_url, file_location,
                             rating, twitter_profile[0]['data']['screen_name']])
-
+            
 
     else:
         message = "Errors: %s" % " ".join(error.message for error in

@@ -2,7 +2,6 @@ from django.db import models
 from singly.models import UserProfile
 
 class UserResume(models.Model):
-
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(UserProfile)
     file_name = models.CharField(max_length=50)
@@ -19,3 +18,4 @@ class CandidateRating(models.Model):
 
     class Meta:
         db_table = u'candidate_rating'
+

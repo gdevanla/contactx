@@ -2,7 +2,6 @@
 import os
 import socket
 
-
 ipaddr=socket.gethostbyname(socket.gethostname())
 
 DEBUG = True
@@ -13,7 +12,8 @@ SINGLY_CLIENT_ID = ''
 SINGLY_CLIENT_SECRET = ''
 # lvh.me is just a domain name for localhost
 #SINGLY_REDIRECT_URI = 'http://localhost:8000/authorize/callback'
-SINGLY_REDIRECT_URI = 'http://%s:8000/authorize/callback' % (ipaddr)
+SINGLY_REDIRECT_URI = 'http://%s:8000/authorize/callback/?mode=%s' % (ipaddr, '_cand')
+
 
 AUTH_PROFILE_MODULE = "singly.UserProfile"
 
