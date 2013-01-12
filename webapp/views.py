@@ -11,6 +11,7 @@ import os
 from webapp.models import UserResume, CandidateRating
 from singly.models import UserProfile
 from singly.singly import Singly
+from webapp.upload_form import UploadFileForm
 
 import urllib
 
@@ -195,7 +196,7 @@ def fullfil_purchase(request, emailid):
             print twitter_profile[0]['data']['screen_name']
             records.append([picture_url, name, linkedin_url, file_location,
                             rating, twitter_profile[0]['data']['screen_name']])
-            
+
 
     else:
         message = "Errors: %s" % " ".join(error.message for error in
