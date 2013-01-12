@@ -1,25 +1,20 @@
 <!DOCTYPE html>
 <html>
- <head>
-  <title>ContactX</title>
+<head>
+<title>ContactX</title>
 <!--  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> -->
 
-<!--
- <meta name="viewport" content="width=device-width,initial-scale=1"/>
- <link rel="stylesheet" href="/static/jquery.mobile-1.0rc1.min.css" />
- <link rel="stylesheet" href="/static/styles.css" />
 
-<script src="/static/js/jquery.js"></script>
-<script src="/static/js/jquery.mobile-1.0rc1.min.js"></script>
--->
 
 <meta charset="utf-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1">
-                <title>ContactX</title>
-                <link rel="stylesheet" href="/static/sec.min.css" />
-                <link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.1/jquery.mobile.structure-1.1.1.min.css" />
-                <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-                <script src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ContactX</title>
+<link rel="stylesheet" href="/static/sec.min.css" />
+<link rel="stylesheet"
+	href="http://code.jquery.com/mobile/1.1.1/jquery.mobile.structure-1.1.1.min.css" />
+<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+<script
+	src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script>
 
 
 
@@ -37,58 +32,62 @@
 
 
 
- </head>
+</head>
 
- <body>
+<body>
 
 	<div id="detailsPage" data-role="page" data-add-back-btn="true">
 
-        	<div data-role="header">
-                <h1>Candidate Details</h1>
-        	</div>
+		<div data-role="header">
+			<h1>Candidate Details</h1>
+		</div>
 
-  		<div data-role="content">
+		<div data-role="content">
 
-        	<img id="employeePic"/>
-        	<div id="employeeDetails">
-       			<h3 id="fullName"></h3>(<a target="blank" id="resume_url" href="">Resume</a>)
-       			<p id="employeeTitle"></p>
-       			<p id="city"></p>
+			<img id="employeePic" />
+			<div id="employeeDetails">
+				<h3 id="fullName"></h3>
+				(<a target="blank" id="resume_url" href="">Resume</a>)
+				<p id="employeeTitle"></p>
+				<p id="city"></p>
 
 
 
 
-        	</div>
+			</div>
 
-	    	<ul id="actionList" data-role="listview" data-inset="true"></ul>
+			<ul id="actionList" data-role="listview" data-inset="true"></ul>
 
- 		</div>
+		</div>
 		<ul data-role="listview" class="ui-listview">
-			<li class="ui-li ui-li-static ui-btn-up-c"><p class="ui-li-aside ui-li-desc"><strong>6:24</strong>PM</p>
+			<li class="ui-li ui-li-static ui-btn-up-c"><p
+					class="ui-li-aside ui-li-desc">
+					<strong>6:24</strong>PM
+				</p>
 				<h3 class="ui-li-heading">Skills</h3>
-				<p id="skillset" class="ui-li-desc"></p>
-
-			</li>
-			<li class="ui-li ui-li-static ui-btn-up-c"><p class="ui-li-aside ui-li-desc"><strong>6:24</strong>PM</p>
+				<p id="skillset" class="ui-li-desc"></p></li>
+			<li class="ui-li ui-li-static ui-btn-up-c"><p
+					class="ui-li-aside ui-li-desc">
+					<strong>6:24</strong>PM
+				</p>
 				<h3 class="ui-li-heading">Other Cool stuff</h3>
-				<p id="coolstuff" class="ui-li-desc"></p>
-
-			</li>
+				<p id="coolstuff" class="ui-li-desc"></p></li>
 
 		</ul>
 
 
-    		<ul id="twitter" data-role="listview" data-insert="true"></ul>
+		<ul id="twitter" data-role="listview" data-insert="true"></ul>
 
-            <form action="{{host_name}}/webapp/rating/{{ user_resume.id }}/" method="get"
-data-ajax="false" class="ui-body ui-body-a ui-corner-all">
+		<form action="{{host_name}}/webapp/rating/{{ user_resume.id }}/"
+			method="get" data-ajax="false"
+			class="ui-body ui-body-a ui-corner-all">
 
-              <fieldset>
-	<div data-role="fieldcontain" class="ui-field-contain ui-body ui-br">
-	<label for="rating" class="select ui-select">Rate:</label>
-		<div class="ui-select">
+			<fieldset>
+				<div data-role="fieldcontain" class="ui-field-contain ui-body ui-br">
+					<label for="rating" class="select ui-select">Rate:</label>
+					<div class="ui-select">
 
-			<!--
+						<!--
 			<div data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-icon="arrow-d" data-iconpos="right" data-theme="a" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-icon-right ui-btn-up-a">
 			<span class="ui-btn-inner ui-btn-corner-all">
 				<span class="ui-btn-text">
@@ -97,37 +96,43 @@ data-ajax="false" class="ui-body ui-body-a ui-corner-all">
 			<span class="ui-icon ui-icon-arrow-d ui-icon-shadow">&nbsp;</span>
 			</span>
 			-->
-			<select name="Rating" id="Rating">
-				<option value="0">0</option>
-				<option value="1">1</option>
-				<option value="2">2</option>
-				<option value="3">3</option>
-				<option value="4">4</option>
-				<option value="5">5</option>
-			</select>
-			<!--
+						<select name="Rating" id="Rating">
+							<option value="0">0</option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+						</select>
+						<!--
 			</div>
 			-->
-		</div>
-	</div>
-	<div data-role="fieldcontain" class="ui-field-contain ui-body ui-br">
-		<input type="hidden" name="Email" id="name" value="freegyaan@gmail.com" data-role="none">
-		<input type="range" name="slider1" id="slider1" value="50" min="0" max="100" data-theme="a" />
-		<p><label for="name">Tags:</label></p>
-		<textarea cols="30" rows="5" name="tags" id="textarea" data-role="none"></textarea>
-	</div>
-	<!--
+					</div>
+				</div>
+				<div data-role="fieldcontain" class="ui-field-contain ui-body ui-br">
+					<input type="hidden" name="Email" id="name"
+						value="freegyaan@gmail.com" data-role="none"> <input
+						type="range" name="slider1" id="slider1" value="50" min="0"
+						max="100" data-theme="a" />
+					<p>
+						<label for="name">Tags:</label>
+					</p>
+					<textarea cols="30" rows="5" name="tags" id="textarea"
+						data-role="none"></textarea>
+				</div>
+				<!--
 	<div data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-icon="null" data-iconpos="null" data-theme="b" class="ui-btn ui-shadow ui-btn-corner-all ui-submit ui-btn-up-b" aria-disabled="false">
 		<span class="ui-btn-inner ui-btn-corner-all">
 		<span class="ui-btn-text">Submit</span></span>
 	-->
-		<button type="submit" data-theme="b" name="submit" value="" class="ui-btn-hidden" aria-disabled="false">Submit</button>
-	<!--
+				<button type="submit" data-theme="b" name="submit" value=""
+					class="ui-btn-hidden" aria-disabled="false">Submit</button>
+				<!--
 	</div>
 	-->
-	</fieldset>
-	</form>
+			</fieldset>
+		</form>
 
 	</div>
-  </body>
+</body>
 </html>
